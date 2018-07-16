@@ -11,6 +11,8 @@
       </accounts> 
     </ui>
     <name>gerbera</name>
+    <interface>eth0</interface>
+    <port>49152</port>
     <udn/>
     <home>/var/lib/gerbera</home>
     <webroot>/usr/share/gerbera/web</webroot>
