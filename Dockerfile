@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM ubuntu:bionic
 
 COPY ./start-gerbera.sh /usr/local/bin/start-gerbera.sh
 
