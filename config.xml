@@ -13,9 +13,8 @@
     <name>gerbera</name>
     <interface>eth0</interface>
     <port>49152</port>
-    <udn/>
     <home>/var/lib/gerbera</home>
-    <webroot>/usr/share/gerbera/web</webroot>
+    <webroot>/usr/local/share/gerbera/web</webroot>
     <!--
         How frequently (in seconds) to send ssdp:alive advertisements.
         Minimum alive value accepted is: 62

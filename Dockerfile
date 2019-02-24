@@ -1,39 +1,37 @@
-FROM ubuntu:bionic as builder
-
-RUN \
-	export DEBIAN_FRONTEND=noninteractive && \
-	apt-get update && \
-	apt-get -y install libavutil-dev libavcodec-dev libavformat-dev libavdevice-dev \
-		libavfilter-dev libavresample-dev libswscale-dev libswresample-dev libpostproc-dev \
-		libupnp1.8-dev libtag1-dev libuuid1 autoconf git build-essential cmake && \
-	mkdir /workspace && \
-	cd /workspace && \
-	git clone https://github.com/gerbera/gerbera.git && \
-	mkdir build && \
-	cd build && \
-	cmake ../gerbera && \
-	make -DWITH_MAGIC=1 -DWITH_MYSQL=1 -DWITH_CURL=1 -DWITH_JS=1 -DWITH_TAGLIB=1 \
-		-DWITH_AVCODEC=1 -DWITH_FFMPEGTHUMBNAILER=1 -DWITH_EXIF=1 -DWITH_LASTFM=1
-
-# actual container
-FROM ubuntu:bionic
+FROM debian:buster
 
 COPY ./start-gerbera.sh /usr/local/bin/start-gerbera.sh
 COPY ./config.xml /var/lib/gerbera/config-dist.xml
-COPY --from=builder /workspace/gerbera/build /import
 
 RUN \
-	export DEBIAN_FRONTEND=noninteractive && \
-	apt-get update && \
-	apt-get -y install libavutil55 libavcodec-extra libavformat57 libavdevice57 libavfilter-extra6 \
-		libavresample3 libswscale4 libswresample2 libpostproc54 libupnp10 libtag1v5 make && \
-	apt-get clean && \
-	rm -rf /var/lib/apt/lists/* && \
-	chmod 0755 /usr/local/bin/start-gerbera.sh && \
-	chown -R gerbera:gerbera /etc/gerbera && \
-	(cd /import && make install) && \
-	rm -rf /import && \
-	rm -v /etc/gerbera/config.xml
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get -y install libavutil-dev libavcodec-dev libavformat-dev libavdevice-dev \
+            libavfilter-dev libavresample-dev libswscale-dev libswresample-dev libpostproc-dev \
+            libexpat-dev libupnp-dev libtag1-dev uuid-dev libsqlite3-dev duktape-dev \
+            libcurl4-openssl-dev libmagic-dev libexif-dev systemd libsystemd-dev pkg-config \
+            zlib1g-dev libffmpegthumbnailer-dev autoconf git build-essential cmake \
+            \
+            libavutil56 libavcodec-extra libavformat58 libavdevice58 libavfilter-extra7 \
+            libavresample4 libswscale5 libswresample3 libpostproc55 libupnp13 libtag1v5 && \
+    mkdir /workspace && \
+    cd /workspace && \
+    git clone https://github.com/gerbera/gerbera.git && \
+    mkdir build && \
+    cd build && \
+    cmake ../gerbera -DWITH_MAGIC=1 -DWITH_CURL=1 -DWITH_JS=1 -DWITH_TAGLIB=1 -DWITH_AVCODEC=1 \
+                        -DWITH_FFMPEGTHUMBNAILER=1 -DWITH_EXIF=1 && \
+    make -j2 && \
+    adduser --disabled-password --gecos "" gerbera && \
+    chmod 0755 /usr/local/bin/start-gerbera.sh && \
+    install -m 0755 -o gerbera -g gerbera -d /etc/gerbera && \
+    (cd /workspace/build && make install) && \
+    rm -rf /workspace && \
+    apt-get -y purge libavutil-dev libavcodec-dev libavformat-dev libavdevice-dev \
+            libavfilter-dev libavresample-dev libswscale-dev libswresample-dev libpostproc-dev \
+            libexpat-dev libupnp-dev libtag1-dev uuid-dev libsqlite3-dev duktape-dev \
+            libcurl4-openssl-dev libmagic-dev libexif-dev systemd libsystemd-dev pkg-config \
+            zlib1g-dev libffmpegthumbnailer-dev autoconf git build-essential cmake
 
 VOLUME [ "/etc/gerbera" ]
 

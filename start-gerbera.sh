@@ -9,4 +9,4 @@ sed -E -i -e "s/(\\s*)<account user=\"(.+)\" password=\".*\"\\/>/\\1<account use
 sed -E -i -e "s/(\\s*)<name>.*<\\/name>/\\1<name>${GERBERA_FRIENDLY_NAME}<\\/name>/g" /etc/gerbera/config.xml
 sed -E -i -e "s/(\\s*)<interface>.*<\\/interface>/\\1<interface>${GERBERA_BIND_INTERFACE}<\\/interface>/g" /etc/gerbera/config.xml
 
-exec /usr/bin/gerbera -c /etc/gerbera/config.xml "$@"
+exec /usr/local/bin/gerbera -c /etc/gerbera/config.xml "$@"
