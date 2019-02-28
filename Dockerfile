@@ -1,9 +1,10 @@
 FROM debian:buster
 
 COPY ./start-gerbera.sh /usr/local/bin/start-gerbera.sh
-COPY ./config.xml /var/lib/gerbera/config-dist.xml
+COPY ./config.xml /var/lib/gerbera-dist/config.xml
 
 ENV LANG C.UTF-8
+ENV GERBERA_VERSION=v1.3.0
 
 RUN \
     export DEBIAN_FRONTEND=noninteractive && \
@@ -20,6 +21,7 @@ RUN \
     mkdir /workspace && \
     cd /workspace && \
     git clone https://github.com/gerbera/gerbera.git && \
+    (cd gerbera && git checkout "${GERBERA_VERSION}") && \
     mkdir build && \
     cd build && \
     cmake ../gerbera -DWITH_MAGIC=1 -DWITH_CURL=1 -DWITH_JS=1 -DWITH_TAGLIB=1 -DWITH_AVCODEC=1 \
@@ -27,7 +29,7 @@ RUN \
     make -j2 && \
     adduser --disabled-password --gecos "" gerbera && \
     chmod 0755 /usr/local/bin/start-gerbera.sh && \
-    install -m 0755 -o gerbera -g gerbera -d /etc/gerbera && \
+    install -m 0755 -o gerbera -g gerbera -d /etc/gerbera /var/lib/gerbera && \
     (cd /workspace/build && make install) && \
     rm -rf /workspace && \
     apt-get -y purge libavutil-dev libavcodec-dev libavformat-dev libavdevice-dev \
@@ -36,7 +38,7 @@ RUN \
             libcurl4-openssl-dev libmagic-dev libexif-dev systemd libsystemd-dev pkg-config \
             zlib1g-dev libffmpegthumbnailer-dev autoconf git build-essential cmake
 
-VOLUME [ "/etc/gerbera" ]
+VOLUME [ "/etc/gerbera", "/var/lib/gerbera" ]
 
 USER gerbera
 ENTRYPOINT [ "/usr/local/bin/start-gerbera.sh" ]
