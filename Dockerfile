@@ -3,6 +3,8 @@ FROM debian:buster
 COPY ./start-gerbera.sh /usr/local/bin/start-gerbera.sh
 COPY ./config.xml /var/lib/gerbera/config-dist.xml
 
+ENV LANG C.UTF-8
+
 RUN \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -13,7 +15,8 @@ RUN \
             zlib1g-dev libffmpegthumbnailer-dev autoconf git build-essential cmake \
             \
             libavutil56 libavcodec-extra libavformat58 libavdevice58 libavfilter-extra7 \
-            libavresample4 libswscale5 libswresample3 libpostproc55 libupnp13 libtag1v5 && \
+            libavresample4 libswscale5 libswresample3 libpostproc55 libupnp13 libtag1v5 \
+            uuid-runtime && \
     mkdir /workspace && \
     cd /workspace && \
     git clone https://github.com/gerbera/gerbera.git && \

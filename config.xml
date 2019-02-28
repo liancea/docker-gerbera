@@ -11,6 +11,7 @@
       </accounts> 
     </ui>
     <name>gerbera</name>
+    <udn/>
     <interface>eth0</interface>
     <port>49152</port>
     <home>/var/lib/gerbera</home>
@@ -69,10 +70,10 @@
   </server>
   <import hidden-files="no">
     <scripting script-charset="UTF-8">
-      <common-script>/usr/share/gerbera/js/common.js</common-script>
-      <playlist-script>/usr/share/gerbera/js/playlists.js</playlist-script>
+      <common-script>/usr/local/share/gerbera/js/common.js</common-script>
+      <playlist-script>/usr/local/share/gerbera/js/playlists.js</playlist-script>
       <virtual-layout type="builtin">
-        <import-script>/usr/share/gerbera/js/import.js</import-script>
+        <import-script>/usr/local/share/gerbera/js/import.js</import-script>
       </virtual-layout>
     </scripting>
     <mappings>
