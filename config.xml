@@ -36,7 +36,12 @@
         <database>gerbera</database>
       </mysql>
     </storage>
-    <protocolInfo extend="no"/><!-- For PS3 support change to "yes" -->
+    <protocolInfo extend="yes"/><!-- For PS3 support change to "yes" -->
+      <custom-http-headers>
+        <!-- Samsung needs it -->
+        <add header="transferMode.dlna.org: Streaming"/>
+        <add header="contentFeatures.dlna.org: DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000"/>
+      </custom-http-headers>
     <!--
        Uncomment the lines below to get rid of jerky avi playback on the
        DSM320 or to enable subtitles support on the DSM units
